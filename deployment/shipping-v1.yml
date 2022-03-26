@@ -1,0 +1,66 @@
+---
+apiVersion: v1
+kind: List
+items:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app: shipping-service-v1
+        version: 0.0.1
+      name: shipping-service-v1
+    spec:
+      ports:
+        - name: http
+          port: 8082
+          protocol: TCP
+          targetPort: 8082
+      type: LoadBalancer
+      selector:
+        app: shipping-service-v1
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        app: shipping-deployment-v1
+        version: 0.0.1
+      name: shipping-deployment-v1
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: shipping-deployment-v1
+      template:
+        metadata:
+          labels:
+            app: shipping-deployment-v1
+            version: 0.0.1
+        spec:
+          containers:
+            - name: shipping-deployment-v1
+              image: ashutoshsahoo/shipping-service
+              imagePullPolicy: IfNotPresent
+              resources:
+                limits:
+                  memory: "500Mi"
+                  cpu: "500m"
+                requests:
+                  memory: "200Mi"
+                  cpu: "200m"
+              ports:
+                - containerPort: 8082
+                  name: http
+                  protocol: TCP
+              env:
+                - name: SPRING_PROFILES_ACTIVE
+                  value: k8s
+                - name: SPRING_DATA_MONGODB_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: mongodb-secret
+                      key: mongo-root-username
+                - name: SPRING_DATA_MONGODB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: mongodb-secret
+                      key: mongo-root-password

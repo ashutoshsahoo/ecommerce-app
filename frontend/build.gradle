@@ -1,0 +1,23 @@
+plugins {
+    id "com.github.node-gradle.node" version "3.2.1"
+    id 'com.palantir.docker' version '0.32.0'
+}
+
+task clean(type: Delete) {
+    delete 'dist', 'build'
+    followSymlinks = true
+}
+
+task build(type: NpmTask) {
+    dependsOn npmInstall
+    npmCommand = ['run', 'build']
+}
+
+docker {
+    dependsOn build as Task
+    name "ashutoshsahoo/ecommerce-${project.name}:latest"
+    buildArgs([VERSION: "${project.version}"])
+    files 'dist', 'nginx.conf'
+    tag 'latest', "${project.version}"
+//    noCache true
+}

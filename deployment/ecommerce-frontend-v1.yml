@@ -1,0 +1,66 @@
+---
+apiVersion: v1
+kind: List
+items:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app: ecommerce-frontend-service-v1
+        version: 0.0.1
+      name: ecommerce-frontend-service-v1
+    spec:
+      ports:
+        - name: http
+          port: 80
+          protocol: TCP
+          targetPort: 80
+      type: LoadBalancer
+      selector:
+        app: ecommerce-frontend-service-v1
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        app: ecommerce-frontend-deployment-v1
+        version: 0.0.1
+      name: ecommerce-frontend-deployment-v1
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: ecommerce-frontend-deployment-v1
+      template:
+        metadata:
+          labels:
+            app: ecommerce-frontend-deployment-v1
+            version: 0.0.1
+        spec:
+          containers:
+            - name: ecommerce-frontend-deployment-v1
+              image: ashutoshsahoo/ecommerce-frontend
+              imagePullPolicy: IfNotPresent
+              resources:
+                limits:
+                  memory: "200Mi"
+                  cpu: "200m"
+                requests:
+                  memory: "100Mi"
+                  cpu: "100m"
+              ports:
+                - containerPort: 80
+                  name: http
+                  protocol: TCP
+              env:
+                - name: SPRING_PROFILES_ACTIVE
+                  value: k8s
+                - name: SPRING_DATA_MONGODB_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: mongodb-secret
+                      key: mongo-root-username
+                - name: SPRING_DATA_MONGODB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: mongodb-secret
+                      key: mongo-root-password

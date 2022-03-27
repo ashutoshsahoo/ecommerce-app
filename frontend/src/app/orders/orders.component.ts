@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { OrdersBlockingService } from './orders-blocking.service';
 import { OrdersReactiveService } from './orders-reactive.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-orders',
@@ -63,7 +64,7 @@ export class OrdersComponent implements OnInit {
         {"id":"p001", "name": "Product A1", "stock": 101},
         {"id":"p002", "name": "Product A2", "stock": 102}
       ]
-      let data  = await this.http.get('http://localhost:8083/api/products').toPromise()
+      let data  = await this.http.get(environment.productsApiUrl).toPromise()
       this.itemList = data
   }
 
@@ -79,7 +80,7 @@ export class OrdersComponent implements OnInit {
       let options = {
         headers: headers
       }
-      this.http.post('http://localhost:8080/api/orders', this.form.value, options).subscribe(
+      this.http.post(environment.ordersApiUrl, this.form.value, options).subscribe(
         (response) => {
           console.log(response)
           this.error = null

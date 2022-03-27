@@ -41,7 +41,7 @@ spec:
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
           ports:
-            - containerPort: 8082
+            - containerPort: 8080
               name: http
               protocol: TCP
           env:

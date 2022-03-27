@@ -29,20 +29,14 @@ spec:
       route:
         - destination:
             host: order-service
-            port:
-              number: 8080
     - match:
         - uri:
             prefix: /api/products
       route:
         - destination:
             host: inventory-service
-            port:
-              number: 8083
     - route:
         - destination:
             host: ecommerce-frontend-service
-            port:
-              number: 80
 ---
 

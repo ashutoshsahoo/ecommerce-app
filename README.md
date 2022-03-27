@@ -15,16 +15,18 @@ This is a Message Driven Architecture example based on spring boot reactive micr
 
 gradle clean dockerTag
 cd deployment
-kc apply -f istio,app,core
+kubectl apply -f core,app,istio
 
 ```
+
+Open [localhost](http://localhost/) to access the ui.
 
 ## Stop Application and Cleanup
 
 ```shell
 
 cd deployment
-kc delete -f istio,app,core
+kubectl delete -f istio,app,core
 
 ```
 
@@ -32,10 +34,20 @@ kc delete -f istio,app,core
 
 ```shell
 
-kc apply -f extra
+kubectl apply -f extra
+
+```
+
+## Remove Mongo Express
+
+```shell
+
+kubectl delete -f extra
 
 ```
 
 ## Reference
 
 - [Reactive Systems in Java](https://www.baeldung.com/java-reactive-systems)
+- [Istio Getting Started](https://istio.io/latest/docs/setup/getting-started/)
+- [Palantir Docker Gradle Plugin](https://github.com/palantir/gradle-docker#docker-gradle-plugin)

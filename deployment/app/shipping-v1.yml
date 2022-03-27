@@ -1,41 +1,33 @@
 apiVersion: v1
-kind: Service
+kind: ServiceAccount
 metadata:
+  name: shipping-service
   labels:
-    app: order-service-v1
-    version: 0.0.1
-  name: order-service-v1
-spec:
-  ports:
-    - name: http
-      port: 8080
-      protocol: TCP
-      targetPort: 8080
-  type: LoadBalancer
-  selector:
-    app: order-deployment-v1
+    account: shipping-service
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: shipping-deployment-v1
   labels:
-    app: order-deployment-v1
+    app: shipping-deployment
     version: 0.0.1
-  name: order-deployment-v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: order-deployment-v1
+      app: shipping-deployment
+      version: 0.0.1
   template:
     metadata:
       labels:
-        app: order-deployment-v1
+        app: shipping-deployment
         version: 0.0.1
     spec:
+      serviceAccountName: shipping-service
       containers:
-        - name: order-deployment-v1
-          image: ashutoshsahoo/order-service
+        - name: shipping-deployment-v1
+          image: ashutoshsahoo/shipping-service
           imagePullPolicy: IfNotPresent
           resources:
             limits:
@@ -44,8 +36,12 @@ spec:
             requests:
               memory: "200Mi"
               cpu: "200m"
+          securityContext:
+            runAsUser: 1000
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
           ports:
-            - containerPort: 8080
+            - containerPort: 8082
               name: http
               protocol: TCP
           env:

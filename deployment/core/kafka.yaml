@@ -105,6 +105,7 @@ metadata:
 spec:
   selector:
     matchLabels:
+      app: zookeeper
       io.kompose.service: zookeeper
       version: latest
   replicas: 1
@@ -113,6 +114,7 @@ spec:
   template:
     metadata:
       labels:
+        app: zookeeper
         io.kompose.service: zookeeper
         version: latest
     spec:

@@ -15,7 +15,7 @@ This is a Message Driven Architecture example based on spring boot reactive micr
 
 gradle clean dockerTag
 cd deployment
-kubectl apply -f .
+kc apply -f istio,app,core
 
 ```
 
@@ -24,7 +24,15 @@ kubectl apply -f .
 ```shell
 
 cd deployment
-kubectl delete -f .
+kc delete -f istio,app,core
+
+```
+
+## Start Mongo Express
+
+```shell
+
+kc apply -f extra
 
 ```
 

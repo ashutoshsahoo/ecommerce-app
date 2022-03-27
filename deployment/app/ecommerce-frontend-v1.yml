@@ -1,38 +1,47 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: ecommerce-frontend-service
   labels:
-    app: ecommerce-frontend-service-v1
-    version: 0.0.1
-  name: ecommerce-frontend-service-v1
+    app: ecommerce-frontend-service
 spec:
   ports:
     - name: http
       port: 80
       protocol: TCP
       targetPort: 80
+      nodePort: 31700
   type: LoadBalancer
   selector:
-    app: ecommerce-frontend-deployment-v1
+    app: ecommerce-frontend-deployment
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ecommerce-frontend-service
+  labels:
+    account: ecommerce-frontend-service
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: ecommerce-frontend-deployment-v1
-    version: 0.0.1
   name: ecommerce-frontend-deployment-v1
+  labels:
+    app: ecommerce-frontend-deployment
+    version: 0.0.1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ecommerce-frontend-deployment-v1
+      app: ecommerce-frontend-deployment
+      version: 0.0.1
   template:
     metadata:
       labels:
-        app: ecommerce-frontend-deployment-v1
+        app: ecommerce-frontend-deployment
         version: 0.0.1
     spec:
+      serviceAccountName: ecommerce-frontend-service
       containers:
         - name: ecommerce-frontend-deployment-v1
           image: ashutoshsahoo/ecommerce-frontend
@@ -44,6 +53,10 @@ spec:
             requests:
               memory: "100Mi"
               cpu: "100m"
+          securityContext:
+            # runAsUser: 1000
+            # readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
           ports:
             - containerPort: 80
               name: http

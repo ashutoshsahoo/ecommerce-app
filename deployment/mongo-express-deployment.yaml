@@ -4,15 +4,18 @@ metadata:
   name: mongo-express-deployment
   labels:
     app: mongo-express
+    version: latest
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: mongo-express
+      version: latest
   template:
     metadata:
       labels:
         app: mongo-express
+        version: latest
     spec:
       containers:
         - name: mongo-express
@@ -26,6 +29,8 @@ spec:
               cpu: "100m"
           ports:
             - containerPort: 8081
+              name: http
+              protocol: TCP
           env:
             - name: ME_CONFIG_BASICAUTH_USERNAME
               valueFrom:
@@ -63,6 +68,7 @@ spec:
   type: LoadBalancer
   ports:
     - protocol: TCP
+      name: http
       port: 8081
       targetPort: 8081
       nodePort: 30000

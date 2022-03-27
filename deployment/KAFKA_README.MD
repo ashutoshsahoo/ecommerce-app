@@ -8,9 +8,9 @@ kubectl -f kafka.yaml apply
 
 export POD_NAME=$(kubectl get pods --namespace default -l "app=kafka" -o jsonpath="{.items[0].metadata.name}")
 
-kubectl --namespace default exec -it $POD_NAME -- kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic orders
+kubectl --namespace default exec -it $POD_NAME -- kafka-topics.sh --create --bootstrap-server kafka:9092 --replication-factor 1 --partitions 1 --topic orders
 
-kubectl --namespace default exec -it $POD_NAME -- kafka-topics.sh --list --bootstrap-server localhost:9092
+kubectl --namespace default exec -it $POD_NAME -- kafka-topics.sh --list --bootstrap-server kafka:9092
 
 ```
 
@@ -18,9 +18,9 @@ kubectl --namespace default exec -it $POD_NAME -- kafka-topics.sh --list --boots
 
 ```shell
 
-kubectl --namespace default exec -it $POD_NAME -- kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders
+kubectl --namespace default exec -it $POD_NAME -- kafka-console-producer.sh --bootstrap-server kafka:9092 --topic orders
 
-kubectl --namespace default exec -it $POD_NAME -- kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning
+kubectl --namespace default exec -it $POD_NAME -- kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic orders --from-beginning
 
 ```
 
